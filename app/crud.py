@@ -1,146 +1,154 @@
 from sqlalchemy.orm import Session
 from . import models, schemas
 
-def set_les(db, table, lessons):
-    for les in lessons:
-        les = get_les(db, int(les))
-        table.SCourseIDs.append(les)
+def set_lesson(db, table, lessons):
+    for lesson in lessons:
+        lesson = get_lesson(db, int(lesson))
+        table.SCourseIDs.append(lesson)
 
-def set_prof(db, table, profs):
-    for prof in profs:
-        prof = get_prof(db, int(prof))
-        table.LIDs.append(prof)
+def set_professor(db, table, professors):
+    for professor in professors:
+        professor = get_professor(db, int(professor))
+        table.LIDs.append(professor)
 
-def set_prof_les(db, table, lessons):
-    for les in lessons:
-        les = get_les(db, int(les))
-        table.LCourseIDs.append(les)
+def set_professor_lesson(db, table, lessons):
+    for lesson in lessons:
+        lesson = get_lesson(db, int(lesson))
+        table.LCourseIDs.append(lesson)
 
-# stu
 
-def get_stu(db: Session, id: int):
+
+# student
+
+def get_student(db: Session, id: int):
     return db.query(models.Student).filter(models.Student.STID == id).first()
 
-def get_stus(db: Session, skip: int = 0, limit: int = 100):
+def get_students(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Student).offset(skip).limit(limit).all()
 
-def create_stu(db: Session, stu: schemas.Stu):
-    db_stu = models.Student(pk=stu.pk, STID=stu.STID, Fname=stu.Fname, Lname=stu.Lname, Father=stu.Father, Birth=stu.Birth, IDS=stu.IDS, BornCity=stu.BornCity, Address=stu.Address, PostalCode=stu.PostalCode, CPhone=stu.CPhone, HPhone=stu.HPhone, Department=stu.Department, Major=stu.Major, Married=stu.Married, ID=stu.ID, Courses_ids=stu.Courses_ids, Professor_ids=stu.Professor_ids)
+def create_student(db: Session, student: schemas.Student):
+    db_student = models.Student(pk=student.pk, STID=student.STID, Fname=student.Fname, Lname=student.Lname, Father=student.Father, Birth=student.Birth, IDS=student.IDS, BornCity=student.BornCity, Address=student.Address, PostalCode=student.PostalCode, CPhone=student.CPhone, HPhone=student.HPhone, Department=student.Department,  Major=student.Major,  Married=student.Married, ID=student.ID, Courses_ids=student.Courses_ids, Professor_ids=student.Professor_ids)
 
-    set_les(db, db_stu, stu.Courses_ids.split(","))
-    set_prof(db, db_stu, stu.Professor_ids.split(","))
+    set_lesson(db, db_student, student.Courses_ids.split(","))
+    set_professor(db, db_student, student.Professor_ids.split(","))
 
-    db.add(db_stu)
+    db.add(db_student)
     db.commit()
-    db.refresh(db_stu)
-    return db_stu
+    db.refresh(db_student)
+    return db_student
 
-def delete_stu(db: Session, id: int):
-    db_stu = db.query(models.Student).filter(models.Student.STID == id).first()
-    name = f"{db_stu.Fname} {db_stu.Lname}"
-    db.delete(db_stu)
+def delete_student(db: Session, id: int):
+    db_student = db.query(models.Student).filter(models.Student.STID == id).first()
+    name = f"{db_student.Fname} {db_student.Lname}"
+    db.delete(db_student)
     db.commit()
-    return {"message": f"the student {name} deleted successfully."}
+    return {"message" : f"the student {name} deleted successfully."}
 
-def update_stu(db: Session, id: int, stu: schemas.Stu):
-    db_stu = db.query(models.Student).filter(models.Student.STID == id).first()
-    db_stu.Fname = stu.Fname
-    db_stu.Lname = stu.Lname
-    db_stu.Father = stu.Father
-    db_stu.Birth = stu.Birth
-    db_stu.IDS = stu.IDS
-    db_stu.BornCity = stu.BornCity
-    db_stu.Address = stu.Address
-    db_stu.PostalCode = stu.PostalCode
-    db_stu.CPhone = stu.CPhone
-    db_stu.HPhone = stu.HPhone
-    db_stu.Department = stu.Department
-    db_stu.Major = stu.Major
-    db_stu.Married = stu.Married
-    db_stu.ID = stu.ID
-    db_stu.Courses_ids = stu.Courses_ids
-    db_stu.Professor_ids = stu.Professor_ids
+def update_student(db: Session, id: int, student: schemas.Student):
+    db_student = db.query(models.Student).filter(models.Student.STID == id).first()
+    db_student.Fname = student.Fname
+    db_student.Lname = student.Lname
+    db_student.Father = student.Father
+    db_student.Birth = student.Birth
+    db_student.IDS = student.IDS
+    db_student.BornCity = student.BornCity
+    db_student.Address = student.Address
+    db_student.PostalCode = student.PostalCode
+    db_student.CPhone = student.CPhone
+    db_student.HPhone = student.HPhone
+    db_student.Department = student.Department
+    db_student.Major = student.Major
+    db_student.Married = student.Married
+    db_student.ID = student.ID
+    db_student.Courses_ids = student.Courses_ids
+    db_student.Professor_ids = student.Professor_ids
 
-    db_stu.SCourseIDs = []
-    db_stu.LIDs = []
-    set_les(db, db_stu, stu.Courses_ids.split(","))
-    set_prof(db, db_stu, stu.Professor_ids.split(","))
+    db_student.SCourseIDs = []
+    db_student.LIDs = []
+    set_lesson(db, db_student, student.Courses_ids.split(","))
+    set_professor(db, db_student, student.Professor_ids.split(","))
 
     db.commit()
-    return {"message": f"the student {db_stu.STID} updated successfully."}
+    return {"message" : f"the student {db_student.STID} updated successfully."}
 
-# prof
 
-def get_prof(db: Session, id: int):
+
+# professor
+
+def get_professor(db: Session, id: int):
     return db.query(models.Professor).filter(models.Professor.LID == id).first()
 
-def get_profs(db: Session, skip: int = 0, limit: int = 100):
+def get_professors(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Professor).offset(skip).limit(limit).all()
 
-def create_prof(db: Session, prof: schemas.Prof):
-    db_prof = models.Professor(pk=prof.pk, LID=prof.LID, Fname=prof.Fname, Lname=prof.Lname, ID=prof.ID, Department=prof.Department, Major=prof.Major, Birth=prof.Birth, BornCity=prof.BornCity, Address=prof.Address, PostalCode=prof.PostalCode, CPhone=prof.CPhone, HPhone=prof.HPhone, Lesson_ids=prof.Lesson_ids)
+def create_professor(db: Session, professor: schemas.Professor):
+    db_professor = models.Professor(pk=professor.pk, LID=professor.LID, Fname=professor.Fname, Lname=professor.Lname, ID=professor.ID, Department=professor.Department, Major=professor.Major, Birth=professor.Birth, BornCity=professor.BornCity, Address=professor.Address, PostalCode=professor.PostalCode, CPhone=professor.CPhone, HPhone=professor.HPhone, Lesson_ids=professor.Lesson_ids)
 
-    set_prof_les(db, db_prof, prof.Lesson_ids.split(","))
+    set_professor_lesson(db, db_professor, professor.Lesson_ids.split(","))
 
-    db.add(db_prof)
+    db.add(db_professor)
     db.commit()
-    db.refresh(db_prof)
-    return db_prof
+    db.refresh(db_professor)
+    return db_professor
 
-def delete_prof(db: Session, id: int):
-    db_prof = db.query(models.Professor).filter(models.Professor.LID == id).first()
-    name = f"{db_prof.Fname} {db_prof.Lname}"
-    db.delete(db_prof)
+def delete_professor(db: Session, id: int):
+    db_professor = db.query(models.Professor).filter(models.Professor.LID == id).first()
+    name = f"{db_professor.Fname} {db_professor.Lname}"
+    db.delete(db_professor)
     db.commit()
-    return {"message": f"the professor {name} deleted successfully."}
+    return {"message" : f"the professor {name} deleted successfully."}
 
-def update_prof(db: Session, id: int, prof: schemas.Prof):
-    db_prof = db.query(models.Professor).filter(models.Professor.LID == id).first()
-    db_prof.Fname = prof.Fname
-    db_prof.Lname = prof.Lname
-    db_prof.ID = prof.ID
-    db_prof.Department = prof.Department
-    db_prof.Major = prof.Major
-    db_prof.Birth = prof.Birth
-    db_prof.BornCity = prof.BornCity
-    db_prof.Address = prof.Address
-    db_prof.PostalCode = prof.PostalCode
-    db_prof.CPhone = prof.CPhone
-    db_prof.HPhone = prof.HPhone
-    db_prof.Lesson_ids = prof.Lesson_ids
+def update_professor(db: Session, id: int, professor: schemas.Professor):
+    db_professor = db.query(models.Professor).filter(models.Professor.LID == id).first()
+    db_professor.Fname = professor.Fname
+    db_professor.Lname = professor.Lname
+    db_professor.ID = professor.ID
+    db_professor.Department = professor.Department
+    db_professor.Major = professor.Major
+    db_professor.Birth = professor.Birth
+    db_professor.BornCity = professor.BornCity
+    db_professor.Address = professor.Address
+    db_professor.PostalCode = professor.PostalCode
+    db_professor.CPhone = professor.CPhone
+    db_professor.HPhone = professor.HPhone
+    db_professor.Lesson_ids = professor.Lesson_ids
 
-    db_prof.LCourseIDs = []
-    set_prof_les(db, db_prof, prof.Lesson_ids.split(","))
+    db_professor.LCourseIDs = []
+    set_professor_lesson(db, db_professor, professor.Lesson_ids.split(","))
 
     db.commit()
-    return {"message": f"the professor {db_prof.LID} updated successfully."}
+    return {"message" : f"the professor {db_professor.LID} updated successfully."}
 
-# les
 
-def get_les(db: Session, id: int):
+
+# lesson
+
+def get_lesson(db: Session, id: int):
     return db.query(models.Lesson).filter(models.Lesson.CID == id).first()
 
 def get_lessons(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Lesson).offset(skip).limit(limit).all()
 
-def create_les(db: Session, les: schemas.Les):
-    db_les = models.Lesson(pk=les.pk, CID=les.CID, CName=les.CName, Department=les.Department, Credit=les.Credit)
-    db.add(db_les)
+def create_lesson(db: Session, lesson: schemas.Lesson):
+    db_lesson = models.Lesson(pk=lesson.pk, CID=lesson.CID, CName=lesson.CName, Department=lesson.Department, Credit=lesson.Credit)
+    db.add(db_lesson)
     db.commit()
-    db.refresh(db_les)
-    return db_les
+    db.refresh(db_lesson)
+    return db_lesson
 
-def delete_les(db: Session, id: int):
-    db_les = db.query(models.Lesson).filter(models.Lesson.CID == id).first()
-    db.delete(db_les)
+def delete_lesson(db: Session, id: int):
+    db_lesson = db.query(models.Lesson).filter(models.Lesson.CID == id).first()
+    db.delete(db_lesson)
     db.commit()
-    return {"message": f"the lesson {db_les.CName} deleted successfully."}
+    return {"message" : f"the lesson {db_lesson.CName} deleted successfully."}
 
-def update_les(db: Session, id: int, les: schemas.Les):
-    db_les = db.query(models.Lesson).filter(models.Lesson.CID == id).first()
-    db_les.CName = les.CName
-    db_les.Department = les.Department
-    db_les.Credit = les.Credit
+def update_lesson(db: Session, id: int, lesson: schemas.Lesson):
+    db_lesson = db.query(models.Lesson).filter(models.Lesson.CID == id).first()
+    db_lesson.CName = lesson.CName
+    db_lesson.Department = lesson.Department
+    db_lesson.Credit = lesson.Credit
 
     db.commit()
-    return {"message": f"the lesson {db_les.CID} updated successfully."}
+    return {"message" : f"the lesson {db_lesson.CID} updated successfully."}
+
+

@@ -6,7 +6,7 @@ COPY /app/requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY app .
+COPY source .
 
 CMD ["fastapi", "run", "main.py"]
 

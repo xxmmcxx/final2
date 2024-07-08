@@ -2,80 +2,84 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship
 from .database import Base
 
-stu_les_assoc = Table(
-    'stu_les',
+
+student_lesson_association = Table(
+    'student_lesson',
     Base.metadata,
-    Column('stu_id', Integer, ForeignKey('stus.stid')),
-    Column('les_id', Integer, ForeignKey('less.c_id'))
+    Column('student_id', Integer, ForeignKey('students.STID')),
+    Column('lesson_id', Integer, ForeignKey('lessons.CID'))
 )
 
-stu_prof_assoc = Table(
-    'stu_prof',
+student_professor_association = Table(
+    'student_professor',
     Base.metadata,
-    Column('stu_id', Integer, ForeignKey('stus.stid')),
-    Column('prof_id', Integer, ForeignKey('profs.lid'))
+    Column('student_id', Integer, ForeignKey('students.STID')),
+    Column('professor_id', Integer, ForeignKey('professors.LID'))
 )
 
-prof_les_assoc = Table(
-    'prof_les',
+professor_lesson_association = Table(
+    'professor_lesson',
     Base.metadata,
-    Column('prof_id', Integer, ForeignKey('profs.lid')),
-    Column('les_id', Integer, ForeignKey('less.c_id'))
+    Column('professor_id', Integer, ForeignKey('professors.LID')),
+    Column('lesson_id', Integer, ForeignKey('lessons.CID'))
 )
 
-class Stu(Base):
-    __tablename__ = "stus"
+class Student(Base):
+    __tablename__ = "students"
     pk = Column(Integer, primary_key=True, unique=True, index=True)
-    stid = Column(Integer, unique=True)
-    fname = Column(String)
-    lname = Column(String)
-    father = Column(String)
-    birth = Column(String)
-    ids = Column(String)
-    born_city = Column(String)
-    address = Column(String)
-    postal_code = Column(String)
-    cphone = Column(String)
-    hphone = Column(String)
-    dept = Column(String)
-    major = Column(String)
-    married = Column(Boolean)
-    id = Column(String, unique=True)
-    c_ids = Column(String)
-    p_ids = Column(String)
+    STID = Column(Integer, unique=True)
+    Fname = Column(String)
+    Lname = Column(String)
+    Father = Column(String)
+    Birth = Column(String)
+    IDS = Column(String)
+    BornCity = Column(String)
+    Address = Column(String)
+    PostalCode = Column(String)
+    CPhone = Column(String)
+    HPhone = Column(String)
+    Department = Column(String)
+    Major = Column(String)
+    Married = Column(Boolean)
+    ID = Column(String, unique=True)
+    Courses_ids = Column(String)
+    Professor_ids = Column(String)
 
-    s_c_ids = relationship("Les", secondary=stu_les_assoc, back_populates="stu")
-    lids = relationship("Prof", secondary=stu_prof_assoc, back_populates="stu")
+    SCourseIDs = relationship("Lesson", secondary=student_lesson_association, back_populates="student")
+    LIDs = relationship("Professor", secondary=student_professor_association, back_populates="student")
 
 
-class Prof(Base):
-    __tablename__ = "profs"
+
+class Professor(Base):
+    __tablename__ = "professors"
     pk = Column(Integer, primary_key=True, unique=True)
-    lid = Column(Integer, unique=True)
-    fname = Column(String)
-    lname = Column(String)
-    id = Column(String, unique=True)
-    dept = Column(String)
-    major = Column(String)
-    birth = Column(String)
-    born_city = Column(String)
-    address = Column(String)
-    postal_code = Column(String)
-    cphone = Column(String)
-    hphone = Column(String)
-    l_ids = Column(String)
+    LID = Column(Integer, unique=True)
+    Fname = Column(String)
+    Lname = Column(String)
+    ID = Column(String, unique=True)
+    Department = Column(String)
+    Major = Column(String)
+    Birth = Column(String)
+    BornCity = Column(String)
+    Address = Column(String)
+    PostalCode = Column(String)
+    CPhone = Column(String)
+    HPhone = Column(String)
+    Lesson_ids = Column(String)
 
-    l_c_ids = relationship("Les", secondary=prof_les_assoc, back_populates="prof")
-    stu = relationship("Stu", secondary=stu_prof_assoc, back_populates="lids")
+    LCourseIDs = relationship("Lesson", secondary=professor_lesson_association, back_populates="professor")
+    student = relationship("Student", secondary=student_professor_association, back_populates="LIDs")
 
 
-class Les(Base):
-    __tablename__ = "less"
+class Lesson(Base):
+    __tablename__ = "lessons"
     pk = Column(Integer, primary_key=True, unique=True)
-    c_id = Column(Integer, unique=True)
-    cname = Column(String)
-    dept = Column(String)
-    credit = Column(Integer)
+    CID = Column(Integer, unique=True)
+    CName = Column(String)
+    Department = Column(String)
+    Credit = Column(Integer)
 
-    stu = relationship("Stu", secondary=stu_les_assoc, back_populates="s_c_ids")
-    prof = relationship("Prof", secondary=prof_les_assoc, back_populates="l_c_ids")
+    student = relationship("Student", secondary=student_lesson_association, back_populates="SCourseIDs")
+    professor = relationship("Professor", secondary=professor_lesson_association, back_populates="LCourseIDs")
+
+

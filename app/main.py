@@ -7,6 +7,7 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+
 # Dependency
 def get_db():
     db = SessionLocal()
@@ -15,107 +16,113 @@ def get_db():
     finally:
         db.close()
 
-# stu (student)
+
+# student
 
 @app.get("/students/")
-def read_stus(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    stus = crud.get_stus(db, skip=skip, limit=limit)
-    return stus
+def read_students(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    students = crud.get_students(db, skip=skip, limit=limit)
+    return students
 
-@app.get("/students/{stu_id}/")
-def read_stu(stu_id: int, db: Session = Depends(get_db)):
-    db_stu = crud.get_stu(db, id=stu_id)
-    if db_stu is None:
-        raise HTTPException(status_code=404, detail="Stu not found")
-    return db_stu
+@app.get("/students/{student_id}/")
+def read_student(student_id: int, db: Session = Depends(get_db)):
+    db_student = crud.get_student(db, id=student_id)
+    if db_student is None:
+        raise HTTPException(status_code=404, detail="Student not found")
+    return db_student
 
 @app.post("/RegStu/")
-def create_stu(stu: schemas.Stu, db: Session = Depends(get_db)):
-    db_stu = crud.get_stu(db, id=stu.STID)
-    if db_stu:
-        raise HTTPException(status_code=400, detail="Stu already registered")
-    return crud.create_stu(db=db, stu=stu)
+def create_student(student: schemas.Student, db: Session = Depends(get_db)):
+    db_student = crud.get_student(db, id=student.STID)
+    if db_student:
+        raise HTTPException(status_code=400, detail="student already registered")
+    return crud.create_student(db=db, student=student)
 
 @app.delete("/DelStu/{STID}/")
-def delete_stu(STID: int, db: Session = Depends(get_db)):
-    db_stu = crud.get_stu(db, id=STID)
-    if not db_stu:
-        raise HTTPException(status_code=400, detail="Stu not exist")
-    return crud.delete_stu(db=db, id=STID)
+def delete_student(STID: int, db: Session = Depends(get_db)):
+    db_student = crud.get_student(db, id=STID)
+    if not db_student:
+        raise HTTPException(status_code=400, detail="student not exist")
+    return crud.delete_student(db=db, id=STID)
 
 @app.put("/UpdateStu/{STID}/")
-async def update_stu(STID: int, stu: schemas.Stu, db: Session = Depends(get_db)):
-    db_stu = crud.get_stu(db, id=STID)
-    if not db_stu:
-        raise HTTPException(status_code=400, detail="Stu not exist")
-    return crud.update_stu(db=db, id=STID, stu=stu)
+async def update_student(STID: int, student: schemas.Student, db: Session = Depends(get_db)):
+    db_student = crud.get_student(db, id=STID)
+    if not db_student:
+        raise HTTPException(status_code=400, detail="student not exist")
+    return crud.update_student(db=db, id=STID, student=student)
 
-# prof (professor)
+
+
+# professor
 
 @app.get("/professors/")
-def read_profs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    profs = crud.get_profs(db, skip=skip, limit=limit)
-    return profs
+def read_professors(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    professors = crud.get_professors(db, skip=skip, limit=limit)
+    return professors
 
-@app.get("/professors/{prof_id}/")
-def read_prof(prof_id: int, db: Session = Depends(get_db)):
-    db_prof = crud.get_prof(db, id=prof_id)
-    if db_prof is None:
-        raise HTTPException(status_code=404, detail="Prof not found")
-    return db_prof
+@app.get("/professors/{professo_id}/")
+def read_professor(professo_id: int, db: Session = Depends(get_db)):
+    db_professor = crud.get_professor(db, id=professo_id)
+    if db_professor is None:
+        raise HTTPException(status_code=404, detail="Professor not found")
+    return db_professor
 
-@app.post("/RegProf/")
-def create_prof(prof: schemas.Prof, db: Session = Depends(get_db)):
-    db_prof = crud.get_prof(db, id=prof.LID)
-    if db_prof:
-        raise HTTPException(status_code=400, detail="Prof already registered")
-    return crud.create_prof(db=db, prof=prof)
+@app.post("/RegPro/")
+def create_professor(professor: schemas.Professor, db: Session = Depends(get_db)):
+    db_professor = crud.get_professor(db, id=professor.LID)
+    if db_professor:
+        raise HTTPException(status_code=400, detail="Professor already registered")
+    return crud.create_professor(db=db, professor=professor)
 
-@app.delete("/DelProf/{LID}/")
-def delete_prof(LID: int, db: Session = Depends(get_db)):
-    db_prof = crud.get_prof(db, id=LID)
-    if not db_prof:
-        raise HTTPException(status_code=400, detail="Prof not exist")
-    return crud.delete_prof(db=db, id=LID)
+@app.delete("/DelPro/{LID}/")
+def delete_professor(LID: int, db: Session = Depends(get_db)):
+    db_professor = crud.get_professor(db, id=LID)
+    if not db_professor:
+        raise HTTPException(status_code=400, detail="Professor not exist")
+    return crud.delete_professor(db=db, id=LID)
 
-@app.put("/UpdateProf/{LID}/")
-async def update_prof(LID: int, prof: schemas.Prof, db: Session = Depends(get_db)):
-    db_prof = crud.get_prof(db, id=LID)
-    if not db_prof:
-        raise HTTPException(status_code=400, detail="Prof not exist")
-    return crud.update_prof(db=db, id=LID, prof=prof)
+@app.put("/UpdatePro/{LID}/")
+async def update_professor(LID: int, professor: schemas.Professor, db: Session = Depends(get_db)):
+    db_professor = crud.get_professor(db, id=LID)
+    if not db_professor:
+        raise HTTPException(status_code=400, detail="Professor not exist")
+    return crud.update_professor(db=db, id=LID, professor=professor)
 
-# les (lesson)
+
+
+# lesson
 
 @app.get("/lessons/")
-def read_les(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    les = crud.get_les(db, skip=skip, limit=limit)
-    return les
+def read_lessons(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    lessons = crud.get_lessons(db, skip=skip, limit=limit)
+    return lessons
 
-@app.get("/lessons/{les_id}/")
-def read_le(les_id: int, db: Session = Depends(get_db)):
-    db_le = crud.get_le(db, id=les_id)
-    if db_le is None:
-        raise HTTPException(status_code=404, detail="Les not found")
-    return db_le
+@app.get("/lessons/{lesson_id}/")
+def read_lesson(lesson_id: int, db: Session = Depends(get_db)):
+    db_lesson = crud.get_lesson(db, id=lesson_id)
+    if db_lesson is None:
+        raise HTTPException(status_code=404, detail="Lesson not found")
+    return db_lesson
 
-@app.post("/RegLes/")
-def create_le(le: schemas.Les, db: Session = Depends(get_db)):
-    db_le = crud.get_le(db, id=le.CID)
-    if db_le:
-        raise HTTPException(status_code=400, detail="Les already registered")
-    return crud.create_le(db=db, le=le)
+@app.post("/RegLesson/")
+def create_lesson(lesson: schemas.Lesson, db: Session = Depends(get_db)):
+    db_lesson = crud.get_lesson(db, id=lesson.CID)
+    if db_lesson:
+        raise HTTPException(status_code=400, detail="Lesson already registered")
+    return crud.create_lesson(db=db, lesson=lesson)
 
-@app.delete("/DelLes/{CID}/")
-def delete_le(CID: int, db: Session = Depends(get_db)):
-    db_le = crud.get_le(db, id=CID)
-    if not db_le:
-        raise HTTPException(status_code=400, detail="Les not exist")
-    return crud.delete_le(db=db, id=CID)
+@app.delete("/DelLesson/{CID}/")
+def delete_lesson(CID: int, db: Session = Depends(get_db)):
+    db_lesson = crud.get_lesson(db, id=CID)
+    if not db_lesson:
+        raise HTTPException(status_code=400, detail="Lesson not exist")
+    return crud.delete_lesson(db=db, id=CID)
 
-@app.put("/UpdateLes/{CID}/")
-async def update_le(CID: int, le: schemas.Les, db: Session = Depends(get_db)):
-    db_le = crud.get_le(db, id=CID)
-    if not db_le:
-        raise HTTPException(status_code=400, detail="Les not exist")
-    return crud.update_le(db=db, id=CID, le=le)
+@app.put("/UpdateLesson/{CID}/")
+async def update_lesson(CID: int, lesson: schemas.Lesson, db: Session = Depends(get_db)):
+    db_lesson = crud.get_lesson(db, id=CID)
+    if not db_lesson:
+        raise HTTPException(status_code=400, detail="Lesson not exist")
+    return crud.update_lesson(db=db, id=CID, lesson=lesson)
+
