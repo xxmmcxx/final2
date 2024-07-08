@@ -19,6 +19,10 @@ def get_db():
 
 # student
 
+def abcdr():
+    pass
+
+
 @app.get("/students/")
 def read_students(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     students = crud.get_students(db, skip=skip, limit=limit)

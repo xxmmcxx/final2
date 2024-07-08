@@ -27,7 +27,7 @@ def get_students(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Student).offset(skip).limit(limit).all()
 
 def create_student(db: Session, student: schemas.Student):
-    db_student = models.Student(pk=student.pk, STID=student.STID, Fname=student.Fname, Lname=student.Lname, Father=student.Father, Birth=student.Birth, IDS=student.IDS, BornCity=student.BornCity, Address=student.Address, PostalCode=student.PostalCode, CPhone=student.CPhone, HPhone=student.HPhone, Department=student.Department,  Major=student.Major,  Married=student.Married, ID=student.ID, Courses_ids=student.Courses_ids, Professor_ids=student.Professor_ids)
+    db_student = models.Student(pk=student.pk, STID=student.STID, Fname=student.Fname, Lname=student.Lname, Father=student.Father, Birth=student.Birth, IDS=student.IDS, BornCity=student.BornCity, Address=student.Address, PostalCode=student.PostalCode, CPhone=student.CPhone, HPhone=student.HPhone, Department=student.Department, Major=student.Major, Married=student.Married, ID=student.ID, Courses_ids=student.Courses_ids, Professor_ids=student.Professor_ids)
 
     set_lesson(db, db_student, student.Courses_ids.split(","))
     set_professor(db, db_student, student.Professor_ids.split(","))

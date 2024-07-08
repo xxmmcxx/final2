@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field, validator
-import os
 import json
 from .database import SessionLocal
 from . import crud
