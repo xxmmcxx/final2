@@ -19,8 +19,7 @@ def get_db():
 
 # student
 
-def abcdr():
-    pass
+
 
 
 @app.get("/students/")
